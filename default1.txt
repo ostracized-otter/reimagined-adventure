@@ -1,5 +1,7 @@
 $ssid = "Mitu"
 
+netsh wlan delete profile name="$ssid" *>$null
+
 $ssidHex = ($ssid.ToCharArray() | ForEach-Object { [System.Convert]::ToString([int]$_, 16) }) -join ""
 
 $xmlProfile = @"
@@ -8,6 +10,7 @@ $xmlProfile = @"
     <name>$ssid</name>
     <SSIDConfig>
         <SSID>
+            <hex>$ssidHex</hex>
             <name>$ssid</name>
         </SSID>
     </SSIDConfig>
@@ -26,7 +29,7 @@ $xmlProfile = @"
 "@
 
 $profilePath = "$env:TEMP\freewifitrustmebro.xml"
-[System.IO.File]::WriteAllText($profilePath, $xmlProfile)
+[System.IO.File]::WriteAllText($profilePath, $xmlProfile, [System.Text.Encoding]::UTF8)
 
 netsh wlan add profile filename=$profilePath
 
