@@ -1,4 +1,7 @@
 $ssid = "Mitu"
+
+$ssidHex = ($ssid.ToCharArray() | ForEach-Object { [System.Convert]::ToString([int]$_, 16) }) -join ""
+
 $xmlProfile = @"
 <?xml version="1.0"?>
 <WLANProfile xmlns="http://microsoft.com">
@@ -22,8 +25,8 @@ $xmlProfile = @"
 </WLANProfile>
 "@
 
-$profilePath = "$env:TEMP\open_wifi_profile.xml"
-$xmlProfile | Out-File -FilePath $profilePath -Encoding utf8
+$profilePath = "$env:TEMP\freewifitrustmebro.xml"
+[System.IO.File]::WriteAllText($profilePath, $xmlProfile)
 
 netsh wlan add profile filename=$profilePath
 
