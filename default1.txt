@@ -1,0 +1,33 @@
+$ssid = "Mitu"
+$xmlProfile = @"
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://microsoft.com">
+    <name>$ssid</name>
+    <SSIDConfig>
+        <SSID>
+            <name>$ssid</name>
+        </SSID>
+    </SSIDConfig>
+    <connectionType>ESS</connectionType>
+    <connectionMode>auto</connectionMode>
+    <MSM>
+        <security>
+            <authEncryption>
+                <authentication>open</authentication>
+                <encryption>none</encryption>
+                <useOneX>false</useOneX>
+            </authEncryption>
+        </security>
+    </MSM>
+</WLANProfile>
+"@
+
+$profilePath = "$env:TEMP\open_wifi_profile.xml"
+$xmlProfile | Out-File -FilePath $profilePath -Encoding utf8
+
+netsh wlan add profile filename=$profilePath
+
+netsh wlan connect name=$ssid
+
+Remove-Item -Path $profilePath
+
